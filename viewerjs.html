@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src="jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+function abc()
+{
+	
+	var can=document.getElementById("canvas1");
+	if (can != null)
+	 {
+	var ctx= can.getContext('2d');
+	ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(300,150);
+    ctx.stroke();
+}
+else
+{
+	alert("somethingwrong");
+}
+}
+
+
+	
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<button onclick="abc();">Try it</button>
+<a href="ViewerJs/#../ViewerJs/C.pdf">qwe</a>
+<iframe id="viewer" src ="ViewerJs/#../ViewerJs/C.pdf" width='800' height='600'></iframe>
+</body>
+</html>
