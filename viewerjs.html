@@ -36,8 +36,8 @@ if (can != null)
 	{
     elem = document.createElement("BUTTON");
     elem.id = 'butt';
-    elem.innerHTML = ' annotate '
-    var qwe=document.getElementById('frame').contentWindow.document.getElementById("toolbarRight");
+    elem.innerHTML = ' annotate ';
+	var qwe=document.getElementById('frame').contentWindow.document.getElementById("toolbarRight");
     qwe.insertBefore(elem,qwe.childNodes[0]);
 	flag=1;
 	}
@@ -57,7 +57,7 @@ else
 </head>
 
 <body>
-<button onclick="abc();">Try it</button>
+<button onclick="abc();">Enable Annotations</button>
 <a href="ViewerJs/#../ViewerJs/C.pdf">qwe</a>
 <iframe id="frame" src ="ViewerJs/#../ViewerJs/C.pdf" width='800' height='600'></iframe>
 </body>
