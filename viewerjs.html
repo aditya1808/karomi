@@ -3,25 +3,50 @@
 <head>
 <script src="jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
-
+var flag=0;
 function abc()
 {
+//Get access to canvas element on which PDF file gets rendered.
+//Generally the canvas Element has id  "canvas1" (say for 1st page).
 	
-	var can=document.getElementById('frame').contentWindow.document.getElementById("canvas1");
-	
-	alert(can);
-	if (can != null)
-	 {
+var can=document.getElementById('frame').contentWindow.document.getElementById("canvas1");
+if (can != null)
+{
 	var ctx= can.getContext('2d');
+//Code to draw rectangle instead of line on canvas.	
+	//ctx.rect(0, 50, 50, 100);
+	//ctx.fillStyle = 'yellow';
+    //ctx.fill();
+    //ctx.lineWidth = 7;
+    //ctx.strokeStyle = 'black';
+    //ctx.stroke();
+	
+
+//Code to draw line on canvas.
 	ctx.beginPath();
     ctx.moveTo(0,0);
     ctx.lineTo(300,150);
     ctx.stroke();
+	
+	
+//Following CODE is to add annotate button on toolbar
+//we use insertBefore() function to add the button.
+//Add button on DIV element with ID "toolbarRight".
+   	if(flag == 0)
+	{
+    elem = document.createElement("BUTTON");
+    elem.id = 'butt';
+    elem.innerHTML = ' annotate '
+    var qwe=document.getElementById('frame').contentWindow.document.getElementById("toolbarRight");
+    qwe.insertBefore(elem,qwe.childNodes[0]);
+	flag=1;
+	}
 }
 else
 {
 	alert("somethingwrong");
 }
+
 }
 
 

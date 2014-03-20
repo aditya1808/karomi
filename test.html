@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src="jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+var t;
+var btn;
+function abc()
+{
+var btn=document.createElement("p");
+var t=document.createTextNode("CLICK ME");
+btn.appendChild(t);
+
+ elem = document.createElement("BUTTON");
+ elem.id = 'myID';
+ elem.innerHTML = ' my Text '
+ document.body.insertBefore(elem,document.body.childNodes[0]);
+}
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<button onclick="abc()">Try it</button>
+</body>
+</html>
