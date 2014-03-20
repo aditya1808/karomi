@@ -7,7 +7,9 @@
 function abc()
 {
 	
-	var can=document.getElementById("canvas1");
+	var can=document.getElementById('frame').contentWindow.document.getElementById("canvas1");
+	//var c=can.document.getElementById("canvas1");
+	alert(can);
 	if (can != null)
 	 {
 	var ctx= can.getContext('2d');
@@ -32,6 +34,6 @@ else
 <body>
 <button onclick="abc();">Try it</button>
 <a href="ViewerJs/#../ViewerJs/C.pdf">qwe</a>
-<iframe id="viewer" src ="ViewerJs/#../ViewerJs/C.pdf" width='800' height='600'></iframe>
+<iframe id="frame" src ="ViewerJs/#../ViewerJs/C.pdf" width='800' height='600'></iframe>
 </body>
 </html>
