@@ -35,12 +35,20 @@ if (can != null)
    	if(flag == 0)
 	{
     elem = document.createElement("BUTTON");
-    elem.id = 'butt';
+
+	elem.id = 'butt';
     elem.innerHTML = ' annotate ';
+	elem.addEventListener("click",annotate,false);
 	var qwe=document.getElementById('frame').contentWindow.document.getElementById("toolbarRight");
     qwe.insertBefore(elem,qwe.childNodes[0]);
 	flag=1;
+	
 	}
+	function annotate()
+   { 
+	alert("Now you can draw shapes to annotate");
+   }
+
 }
 else
 {
@@ -50,7 +58,6 @@ else
 }
 
 
-	
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Untitled Document</title>
