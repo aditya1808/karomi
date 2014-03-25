@@ -66,8 +66,8 @@ var can=document.getElementById('frame').contentWindow.document.getElementById("
    { 
    //CODE to draw annotations on the canvas.
    //This code will erase the content canvas that we are drawing upon and redraws rectangle according to mouse drag.
-   //Should be able draw a rectangle without erasing canvas first.
-   //Rectangle drawn using mouse drag is not exactly where mouse is pointed. Need to fix it 
+   //Should be able draw a Shape without erasing canvas first.
+   //Shapes drawn using mouse drag is not exactly where mouse is pointed. Need to fix it 
  
    	iBody = $("#frame").contents().find("body");
 
@@ -118,7 +118,7 @@ var can=document.getElementById('frame').contentWindow.document.getElementById("
             var mouseX = parseInt(e.clientX - offsetX);
             var mouseY = parseInt(e.clientY - offsetY);
 
-            // draw the current line
+            // drawing the current rect
            ctx.strokeRect(startX,startY,mouseX-startX,mouseY-startY);
 
         }
@@ -130,14 +130,16 @@ var can=document.getElementById('frame').contentWindow.document.getElementById("
 
             var mouseX = parseInt(e.clientX - offsetX);
             var mouseY = parseInt(e.clientY - offsetY);
-
+			
+             //Storing mouse co-ordinates in the array "storedLines"
             storedLines.push({
                 x1: startX,
                 y1: startY,
                 x2: mouseX,
                 y2: mouseY
             });
-
+			
+           //Redraw previous lines using the stored coordinates
             redrawStoredLines();
 
         }
@@ -151,13 +153,15 @@ var can=document.getElementById('frame').contentWindow.document.getElementById("
                 return;
             }
 
-            // redraw each stored line
+            // redraw each stored rectangle by using stored co-ordinates from "storedLines" array.
             for (var i = 0; i < storedLines.length; i++) {
                ctx.strokeRect(storedLines[i].x1,storedLines[i].y1,storedLines[i].x2-storedLines[i].x1,storedLines[i].y2-storedLines[i].y1);
 
             }
         }
    }
+   
+   
 function DrawLine()
 {
 	   	iBody = $("#frame").contents().find("body");
@@ -187,11 +191,7 @@ function DrawLine()
             handleMouseUp(e);
         });
 
-       // $("#clear").click(function () {
-         //   storedLines.length = 0;
-          //  redrawStoredLines();
-        //});
-
+     
         function handleMouseDown(e) {
             var mouseX = parseInt(e.clientX - offsetX);
             var mouseY = parseInt(e.clientY - offsetY);
@@ -213,7 +213,7 @@ function DrawLine()
             var mouseX = parseInt(e.clientX - offsetX);
             var mouseY = parseInt(e.clientY - offsetY);
 
-            // draw the current line
+            // drawing the current line
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.lineTo(mouseX, mouseY);
@@ -228,14 +228,16 @@ function DrawLine()
 
             var mouseX = parseInt(e.clientX - offsetX);
             var mouseY = parseInt(e.clientY - offsetY);
-
+            
+			//Storing mouse co-ordinates in the array "storedLines" .   
             storedLines.push({
                 x1: startX,
                 y1: startY,
                 x2: mouseX,
                 y2: mouseY
             });
-
+			
+            //Redraw previous lines using the stored coordinates  
             redrawStoredLines();
 
         }
@@ -249,7 +251,7 @@ function DrawLine()
                 return;
             }
 
-            // redraw each stored line
+            // redraw each stored line by using the co-ordinates stored in "storedlines" array.
             for (var i = 0; i < storedLines.length; i++) {
                 ctx.beginPath();
                 ctx.moveTo(storedLines[i].x1, storedLines[i].y1);
