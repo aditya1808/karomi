@@ -3,7 +3,8 @@
 <head>
 <script src="jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
-var flag=0;
+var line_flag=0;
+var rect_flag=0;
 var locA;
 var locB;
 function abc()
@@ -16,7 +17,6 @@ var can=document.getElementById('frame').contentWindow.document.getElementById("
 	var ctx= can.getContext('2d');
 	
 	
-
 //Code to draw rectangle instead of line on canvas.	
 	//ctx.rect(0, 50, 50, 100);
 	//ctx.fillStyle = 'yellow';
@@ -27,129 +27,239 @@ var can=document.getElementById('frame').contentWindow.document.getElementById("
 	
 
 //Code to draw line on canvas.
-	ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineTo(300,150);
-    ctx.stroke();
+	//ctx.beginPath();
+    //ctx.moveTo(0,0);
+    //ctx.lineTo(300,150);
+    //ctx.stroke();
 	
 	
 //Following CODE is to add annotate button on toolbar
 //we use insertBefore() function to add the button.
 //Add button on DIV element with ID "toolbarRight".
-   	if(flag == 0)
+   	if(rect_flag == 0)
 	{
     elem = document.createElement("BUTTON");
 
-	elem.id = 'butt';
-    elem.innerHTML = ' annotate ';
-	elem.addEventListener("click",annotate,false);
+	elem.id = 'drawrect';
+    elem.innerHTML = 'Draw Rect';
+	elem.addEventListener("click",DrawRect,false);
 	var qwe=document.getElementById('frame').contentWindow.document.getElementById("toolbarRight");
     qwe.insertBefore(elem,qwe.childNodes[0]);
-	flag=1;
+	rect_flag=1;
+	}
+	
+	if(line_flag==0)
+	{
+	
+	elem = document.createElement("BUTTON");
+
+	elem.id = 'drawline';
+    elem.innerHTML = 'Draw Line';
+	elem.addEventListener("click",DrawLine,false);
+	var qwe=document.getElementById('frame').contentWindow.document.getElementById("toolbarRight");
+    qwe.insertBefore(elem,qwe.childNodes[0]);
+	line_flag=1;
 	
 	}
-	function annotate()
+	var iBody;
+	function DrawRect()
    { 
    //CODE to draw annotations on the canvas.
    //This code will erase the content canvas that we are drawing upon and redraws rectangle according to mouse drag.
    //Should be able draw a rectangle without erasing canvas first.
    //Rectangle drawn using mouse drag is not exactly where mouse is pointed. Need to fix it 
  
-   	var iBody = $("#frame").contents().find("body");
+   	iBody = $("#frame").contents().find("body");
 
     //obtain control over any element in iframe(#canvas1)
-    var myContent = iBody.find("#canvas1");
+    var myContent = iBody.contents().find("#canvas1");
    
   
+ var canvasOffset = iBody.offset();
+        var offsetX = canvasOffset.left;
+        var offsetY = canvasOffset.top;
+        var storedLines = [];
+        var startX = 0;
+        var startY = 0;
+        var isDown;
 
-	
-	
-	
-	
-	ctx.strokeStyle = "blue";
-    ctx.lineWidth=3;
+        ctx.strokeStyle = "orange";
+        ctx.lineWidth = 3;
 
-    // calculate where the canvas is on the window
-    // (used to help calculate mouseX/mouseY)
-    var $canvas=iBody;
-    var canvasOffset=$canvas.offset();
-    var offsetX=canvasOffset.left;
-    var offsetY=canvasOffset.top;
-    var scrollX=$canvas.scrollLeft();
-    var scrollY=$canvas.scrollTop();
+        iBody.mousedown(function (e) {
+            handleMouseDown(e);
+        });
+        iBody.mousemove(function (e) {
+            handleMouseMove(e);
+        });
+        iBody.mouseup(function (e) {
+            handleMouseUp(e);
+        });
 
-    // this flage is true when the user is dragging the mouse
-    var isDown=false;
+       
+        function handleMouseDown(e) {
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
 
-    // these vars will hold the starting mouse position
-    var startX;
-    var startY;
+            isDown = true;
+            startX = mouseX;
+            startY = mouseY;
+
+        }
+
+        function handleMouseMove(e) {
+
+            if (!isDown) {
+                return;
+            }
+
+            redrawStoredLines();
+
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            // draw the current line
+           ctx.strokeRect(startX,startY,mouseX-startX,mouseY-startY);
+
+        }
 
 
-    function handleMouseDown(e){
-      e.preventDefault();
-      e.stopPropagation();
+        function handleMouseUp(e) {
 
-      // save the starting x/y of the rectangle
-      startX=parseInt(e.clientX-offsetX);
-      startY=parseInt(e.clientY-offsetY);
+            isDown = false;
 
-      // set a flag indicating the drag has begun
-      isDown=true;
-    }
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
 
-    function handleMouseUp(e){
-      e.preventDefault();
-      e.stopPropagation();
+            storedLines.push({
+                x1: startX,
+                y1: startY,
+                x2: mouseX,
+                y2: mouseY
+            });
 
-      // the drag is over, clear the dragging flag
-      isDown=false;
-    }
+            redrawStoredLines();
 
-    function handleMouseOut(e){
-      e.preventDefault();
-      e.stopPropagation();
+        }
 
-      // the drag is over, clear the dragging flag
-      isDown=false;
-    }
 
-    function handleMouseMove(e){
-      e.preventDefault();
-      e.stopPropagation();
+        function redrawStoredLines() {
 
-      // if we're not dragging, just return
-      if(!isDown){return;}
+            ctx.clearRect(0, 0, can.width, can.height);
 
-      // get the current mouse position
-      mouseX=parseInt(e.clientX-offsetX);
-      mouseY=parseInt(e.clientY-offsetY);
+            if (storedLines.length == 0) {
+                return;
+            }
 
-      // Put your mousemove stuff here
+            // redraw each stored line
+            for (var i = 0; i < storedLines.length; i++) {
+               ctx.strokeRect(storedLines[i].x1,storedLines[i].y1,storedLines[i].x2-storedLines[i].x1,storedLines[i].y2-storedLines[i].y1);
 
-      // clear the canvas
-      ctx.clearRect(0,0,can.width,can.height);
-
-      // calculate the rectangle width/height based
-      // on starting vs current mouse position
-      var width=mouseX-startX;
-      var height=mouseY-startY;
-
-      // draw a new rect from the start position 
-      // to the current mouse position
-      ctx.strokeRect(startX,startY,width,height);
-
-    }
-
-    // listen for mouse events
-   iBody.mousedown(function(e){handleMouseDown(e);});
-   iBody.mousemove(function(e){handleMouseMove(e);});
-    iBody.mouseup(function(e){handleMouseUp(e);});
-   iBody.mouseout(function(e){handleMouseOut(e);});
-
-	
+            }
+        }
    }
+function DrawLine()
+{
+	   	iBody = $("#frame").contents().find("body");
 
+        //obtain control over any element in iframe(#canvas1)
+        var myContent = iBody.find("#canvas1");
+   
+  
+        var canvasOffset = iBody.offset();
+        var offsetX = canvasOffset.left;
+        var offsetY = canvasOffset.top;
+        var storedLines = [];
+        var startX = 0;
+        var startY = 0;
+        var isDown;
+
+        ctx.strokeStyle = "orange";
+        ctx.lineWidth = 1;
+
+        iBody.mousedown(function (e) {
+            handleMouseDown(e);
+        });
+        iBody.mousemove(function (e) {
+            handleMouseMove(e);
+        });
+        iBody.mouseup(function (e) {
+            handleMouseUp(e);
+        });
+
+       // $("#clear").click(function () {
+         //   storedLines.length = 0;
+          //  redrawStoredLines();
+        //});
+
+        function handleMouseDown(e) {
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            isDown = true;
+            startX = mouseX;
+            startY = mouseY;
+
+        }
+
+        function handleMouseMove(e) {
+
+            if (!isDown) {
+                return;
+            }
+
+            redrawStoredLines();
+
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            // draw the current line
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.stroke()
+
+        }
+
+
+        function handleMouseUp(e) {
+
+            isDown = false;
+
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            storedLines.push({
+                x1: startX,
+                y1: startY,
+                x2: mouseX,
+                y2: mouseY
+            });
+
+            redrawStoredLines();
+
+        }
+
+
+        function redrawStoredLines() {
+
+            ctx.clearRect(0, 0, can.width, can.height);
+
+            if (storedLines.length == 0) {
+                return;
+            }
+
+            // redraw each stored line
+            for (var i = 0; i < storedLines.length; i++) {
+                ctx.beginPath();
+                ctx.moveTo(storedLines[i].x1, storedLines[i].y1);
+                ctx.lineTo(storedLines[i].x2, storedLines[i].y2);
+                ctx.stroke();
+            }
+        }
+	
+	
+}
 
 
 
